@@ -10,6 +10,7 @@ class Login extends Component {
     }
 
     handleSubmit = (e) => {
+        e.preventDefault();
         this.props.submit({
             username: this.props.username.value,
             password: this.props.password.value,
@@ -45,6 +46,7 @@ class Login extends Component {
                         ) : (null)
                     }
                 </div>
+                <button type="submit">login</button>
             </form>
         );
     }

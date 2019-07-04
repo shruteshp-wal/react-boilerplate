@@ -3,7 +3,8 @@ import Login from '../components/login';
 import { createNamespacer } from '../utils/reducers';
 import * as authAPI from '../api/authentication';
 
-const loginNamespacer = createNamespacer('LOGIN')
+const loginNamespacer = createNamespacer('LOGIN');
+const sessionNamespacer = createNamespacer('SESSION');
 
 const mapStateToProps = (state) => {
     return {
@@ -20,7 +21,6 @@ function delay(duration=2000) {
 const mapDispatchToProps = (dispatch) => {
     return {
         setUsernameValue: async (value) => {
-            await delay();
             dispatch({
                 type: loginNamespacer('SET_USERNAME_VALUE'),
                 payload: {
@@ -37,23 +37,25 @@ const mapDispatchToProps = (dispatch) => {
             })
         },
         submit: async (data) => {
-            dispatch({
-                type: loginNamespacer('SET_LOADING'),
-                payload: {
-                    value: true,
-                }
-            })
             try {
-                await authAPI.login(data);
+                await delay();
+                let response = {
+                    token: 'abcd',
+                    role: 'user',
+                }
+
+                localStorage.setItem('token', response.token);
+                localStorage.setItem('role', response.role);
+
+                dispatch({
+                    type: sessionNamespacer('SET_LOGGED_IN'),
+                    payload: {
+                        value: true,
+                    }
+                })
             } catch (error) {
                 
             }
-            dispatch({
-                type: loginNamespacer('SET_LOADING'),
-                payload: {
-                    value: false,
-                }
-            })
         }
     }
 }
